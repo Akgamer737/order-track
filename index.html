@@ -3,8 +3,454 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Order Tracking</title>
-    <style>
+<style>
+    /* Updated Animation Styles */
+.order-card {
+    animation: cardEntrance 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes cardEntrance {
+    0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+}
+
+.delivered-badge {
+    animation: 
+        pulse 2s infinite ease-in-out,
+        badgeGlow 3s infinite alternate;
+}
+
+@keyframes badgeGlow {
+    0% {
+        box-shadow: 0 0 5px rgba(6, 125, 98, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(6, 125, 98, 0.8);
+    }
+}
+
+.progress-fill {
+    animation: fillProgress 1.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+@keyframes fillProgress {
+    0% { height: 0; }
+    100% { height: 100%; }
+}
+
+.step {
+    animation: stepEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: calc(var(--order) * 0.1s);
+    opacity: 0;
+}
+
+@keyframes stepEntrance {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px) rotateY(90deg);
+    }
+    60% {
+        opacity: 1;
+        transform: translateX(10px) rotateY(-15deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) rotateY(0);
+    }
+}
+
+.step-icon {
+    transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+}
+
+.step:hover .step-icon {
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.step-icon.active {
+    animation: iconPulse 2s infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 153, 0, 0.4);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(255, 153, 0, 0.6);
+    }
+}
+
+.step-icon.delivered {
+    animation: 
+        iconPulse 2s infinite,
+        deliveredGlow 3s infinite alternate;
+}
+
+@keyframes deliveredGlow {
+    0% {
+        box-shadow: 0 0 5px rgba(6, 125, 98, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(6, 125, 98, 0.8);
+    }
+}
+
+.step-icon.failed {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+    20%, 40%, 60%, 80% { transform: translateX(3px); }
+}
+
+.courier-logo {
+    transition: all 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+}
+
+.step:hover .courier-logo {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.package-details {
+    animation: detailsExpand 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes detailsExpand {
+    0% {
+        opacity: 0;
+        transform: scaleY(0.8);
+        transform-origin: top;
+    }
+    100% {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
+
+.detail-item {
+    animation: detailPopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: calc(var(--order) * 0.1s + 0.6s);
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes detailPopIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+    80% {
+        transform: translateY(-5px) scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.help-section {
+    animation: helpSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes helpSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.help-link {
+    position: relative;
+    overflow: hidden;
+}
+
+.help-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #0066c0;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.help-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+    </style 
+</head>
+<body>
+    <div class="header">
+        <div class="header-container">
+            <a href="#" class="logo">Track<span>Express</span></a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="order-card">
+            <div class="order-header">
+                <div>
+                    <div class="order-title">Your order is delivered</div>
+                    <div class="order-id">Order #403-4567890-1234567</div>
+                </div>
+                <div class="delivered-badge">Delivered</div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-line"></div>
+                <div class="progress-fill" style="height: 100%;"></div>
+                <div class="progress-steps">
+                    <!-- Step 1 -->
+                    <div class="step">
+                        <div class="step-icon">
+                            <img src="https://i.imghippo.com/files/FCT6352aGQ.webp" alt="South Korea" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Order placed</div>
+                            <div class="step-date">Monday, May 19, 2025</div>
+                            <div class="step-time">10:30 AM (KST)</div>
+                            <div class="step-location">
+                                <span>South Korea</span>
+                            </div>
+                            <div class="step-description">Your order has been placed and is being processed by the seller.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="step">
+                        <div class="step-icon active">
+                            <img src="https://i.imghippo.com/files/FCT6352aGQ.webp" alt="South Korea" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Picked up by DHL</div>
+                            <div class="step-date">Tuesday, May 20, 2025</div>
+                            <div class="step-time">2:15 PM (KST)</div>
+                            <div class="step-location">
+                                <span>South Korea</span>
+                                <img src="https://i.imghippo.com/files/PfZ3680Ptk.jpg" alt="DHL" class="courier-logo">
+                            </div>
+                            <div class="step-description">Seller has handed over the package to DHL courier partner.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="step">
+                        <div class="step-icon active">
+                            <img src="https://i.imghippo.com/files/FCT6352aGQ.webp" alt="South Korea" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Dispatched from Busan</div>
+                            <div class="step-date">Tuesday, May 20, 2025</div>
+                            <div class="step-time">6:45 PM (KST)</div>
+                            <div class="step-location">
+                                <span>Busan, South Korea</span>
+                                <img src="https://i.imghippo.com/files/PfZ3680Ptk.jpg" alt="DHL" class="courier-logo">
+                            </div>
+                            <div class="step-description">Package has left the Busan facility and is in transit to Pakistan.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4 -->
+                    <div class="step">
+                        <div class="step-icon active">
+                            <img src="https://i.imghippo.com/files/QkS2400sIk.png" alt="Pakistan" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Arrived at Karachi</div>
+                            <div class="step-date">Sunday, May 25, 2025</div>
+                            <div class="step-time">11:20 AM (PKT)</div>
+                            <div class="step-location">
+                                <span>Karachi, Pakistan</span>
+                                <img src="https://i.imghippo.com/files/PfZ3680Ptk.jpg" alt="DHL" class="courier-logo">
+                            </div>
+                            <div class="step-description">Package has arrived at the Karachi facility.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 5 -->
+                    <div class="step">
+                        <div class="step-icon active">
+                            <img src="https://i.imghippo.com/files/QkS2400sIk.png" alt="Pakistan" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Dispatched from Karachi</div>
+                            <div class="step-date">Sunday, May 25, 2025</div>
+                            <div class="step-time">3:50 PM (PKT)</div>
+                            <div class="step-location">
+                                <span>Karachi, Pakistan</span>
+                                <img src="https://i.imghippo.com/files/PfZ3680Ptk.jpg" alt="DHL" class="courier-logo">
+                            </div>
+                            <div class="step-description">Package has left the Karachi facility and is in transit to India.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- New Step - Arrived in Delhi -->
+                    <div class="step">
+                        <div class="step-icon active">
+                            <img src="https://i.imghippo.com/files/aY9677lYM.webp" alt="India" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Arrived at Delhi</div>
+                            <div class="step-date">Monday, May 26, 2025</div>
+                            <div class="step-time">10:30 AM (IST)</div>
+                            <div class="step-location">
+                                <span>Delhi, India</span>
+                                <img src="https://i.imghippo.com/files/PfZ3680Ptk.jpg" alt="DHL" class="courier-logo">
+                            </div>
+                            <div class="step-description">Package has arrived at the Delhi customs facility for clearance.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- New Step - Failed Handover to eKart -->
+                    <div class="step">
+                        <div class="step-icon failed">
+                            <img src="https://i.imghippo.com/files/aY9677lYM.webp" alt="India" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Customs Clearance Completed</div>
+                            <div class="step-date">Tuesday, May 27, 2025</div>
+                            <div class="step-time">9:15 AM (IST)</div>
+                            <div class="step-location">
+                                <span>Delhi, India</span>
+                                <img src="https://i.imghippo.com/files/PfZ3680Ptk.jpg" alt="DHL" class="courier-logo">
+                            </div>
+                            <div class="step-description">Package cleared customs and ready for domestic delivery.</div>
+                            <div class="failed-message">Failed handover to eKart: Import authentication required</div>
+                        </div>
+                    </div>
+                    
+                    <!-- New Step - Successfully Handover to Blue Dart -->
+                    <div class="step">
+                        <div class="step-icon active">
+                            <img src="https://i.imghippo.com/files/aY9677lYM.webp" alt="India" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Handover to Blue Dart</div>
+                            <div class="step-date">Tuesday, May 27, 2025</div>
+                            <div class="step-time">2:45 PM (IST)</div>
+                            <div class="step-location">
+                                <span>Delhi, India</span>
+                                <img src="https://i.imghippo.com/files/QZxR1037Mgc.jpeg" alt="Blue Dart" class="courier-logo">
+                            </div>
+                            <div class="step-description">Package successfully handed over to Blue Dart courier service for final delivery.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 6 (now step 9) -->
+                    <div class="step">
+                        <div class="step-icon active">
+                            <img src="https://i.imghippo.com/files/aY9677lYM.webp" alt="India" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Dispatched from Delhi</div>
+                            <div class="step-date">Tuesday, May 27, 2025</div>
+                            <div class="step-time">6:30 PM (IST)</div>
+                            <div class="step-location">
+                                <span>Delhi, India</span>
+                                <img src="https://i.imghippo.com/files/QZxR1037Mgc.jpeg" alt="Blue Dart" class="courier-logo">
+                            </div>
+                            <div class="step-description">Package has left Delhi facility and is in transit to Kolkata.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 7 (now step 10) -->
+                    <div class="step">
+                        <div class="step-icon active">
+                            <img src="https://i.imghippo.com/files/aY9677lYM.webp" alt="India" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Arrived at Kolkata</div>
+                            <div class="step-date">Wednesday, May 28, 2025</div>
+                            <div class="step-time">9:10 AM (IST)</div>
+                            <div class="step-location">
+                                <span>Kolkata, India</span>
+                                <img src="https://i.imghippo.com/files/QZxR1037Mgc.jpeg" alt="Blue Dart" class="courier-logo">
+                            </div>
+                            <div class="step-description">Package has arrived at the Kolkata facility.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 8 (now step 11) -->
+                    <div class="step">
+                        <div class="step-icon active">
+                            <img src="https://i.imghippo.com/files/aY9677lYM.webp" alt="India" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Dispatched from Kolkata</div>
+                            <div class="step-date">Wednesday, May 28, 2025</div>
+                            <div class="step-time">1:30 PM (IST)</div>
+                            <div class="step-location">
+                                <span>Kolkata, India</span>
+                                <img src="https://i.imghippo.com/files/QZxR1037Mgc.jpeg" alt="Blue Dart" class="courier-logo">
+                            </div>
+                            <div class="step-description">Package has left the Kolkata facility and is in transit to the destination.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 9 (now step 12) -->
+                    <div class="step">
+                        <div class="step-icon active">
+                            <img src="https://i.imghippo.com/files/aY9677lYM.webp" alt="India" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Arrived at Berhampore</div>
+                            <div class="step-date">Thursday, May 29, 2025</div>
+                            <div class="step-time">10:45 AM (IST)</div>
+                            <div class="step-location">
+                                <span>Berhampore, Murshidabad, India</span>
+                                <img src="https://i.imghippo.com/files/QZxR1037Mgc.jpeg" alt="Blue Dart" class="courier-logo">
+                            </div>
+                            <div class="step-description">Package has arrived at the destination city facility.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 10 (now step 13) -->
+                    <div class="step">
+                        <div class="step-icon delivered">
+                            <img src="https://i.imghippo.com/files/aY9677lYM.webp" alt="India" class="country-flag">
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Delivered</div>
+                            <div class="step-date">Thursday, May 29, 2025</div>
+                            <div class="step-time">2:15 PM (IST)</div>
+                            <div class="step-location">
+                                <span>Berhampore, Murshidabad, India</span>
+                                <img src="https://i.imghippo.com/files/QZxR1037Mgc.jpeg" alt="Blue Dart" class="courier-logo">
+                            </div>
+                            <div class="step-description">Your package has been successfully delivered by Blue Dart.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="package-details">
+                <div class="details-title">Package details</div>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Carrier</div>
+                        <div class="detail-value">DHL / Blue Dart</div>
+                    </div><style>
         * {
             box-sizing: border-box;
             font-family: 'Amazon Ember', Arial, sans-serif;
@@ -536,6 +982,74 @@
                         <div class="detail-label">Carrier</div>
                         <div class="detail-value">DHL / Blue Dart</div>
                     </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Tracking ID</div>
+                        <div class="detail-value">DHL1234567890</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Shipped with</div>
+                        <div class="detail-value">Standard Shipping</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Weight</div>
+                        <div class="detail-value">0.6 kg</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Items</div>
+                        <div class="detail-value">1</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Shipped on</div>
+                        <div class="detail-value">May 20, 2025</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Delivered on</div>
+                        <div class="detail-value">May 29, 2025</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Total transit time</div>
+                        <div class="detail-value">10 days</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="help-section">
+            <div class="help-title">Need help with your package?</div>
+            <div class="help-links">
+                <a href="#" class="help-link">Contact the carrier</a>
+                <a href="#" class="help-link">Return or replace items</a>
+                <a href="#" class="help-link">Leave delivery feedback</a>
+                <a href="#" class="help-link">View your orders</a>
+                <a href="#" class="help-link">Shipping policies</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple script to handle animations on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const steps = document.querySelectorAll('.step');
+            
+            function checkVisibility() {
+                steps.forEach(step => {
+                    const rect = step.getBoundingClientRect();
+                    if (rect.top < window.innerHeight - 100) {
+                        step.style.opacity = '1';
+                        step.style.transform = 'translateX(0)';
+                    }
+                });
+            }
+            
+            // Initial check
+            checkVisibility();
+            
+            // Check on scroll
+            window.addEventListener('scroll', checkVisibility);
+        });
+    </script>
+</body>
+</html>
                     <div class="detail-item">
                         <div class="detail-label">Tracking ID</div>
                         <div class="detail-value">DHL1234567890</div>
